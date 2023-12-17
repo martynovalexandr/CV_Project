@@ -29,7 +29,7 @@ def red_brick(i, area_in):
 
 
 def speed_limit(i, area_in):
-    # finding balck area and looking for how much black color there are
+    # finding black area and looking for how much black color there are
     img = cv2.cvtColor(i, cv2.COLOR_BGR2HSV)
 
     lower1 = np.array([0, 0, 0])
@@ -54,6 +54,32 @@ def speed_limit(i, area_in):
         return True
 
 
+def no_road(i, area_in):
+    # finding white area and looking for how much white color there are
+    img = cv2.cvtColor(i, cv2.COLOR_BGR2HSV)
+
+    sensitivity = 45
+    lower = np.array([0, 0, 255 - sensitivity])
+    upper = np.array([255, sensitivity, 255])
+
+    mask = cv2.inRange(img, lower, upper)
+
+    img_masked = cv2.bitwise_and(img, img, mask=mask)
+    gray = cv2.cvtColor(img_masked, cv2.COLOR_BGR2GRAY)
+
+    white_area = i.shape[0] * i.shape[1]
+
+    for k in range(i.shape[0]):
+        for j in range(i.shape[1]):
+            if gray[k, j] == 0:
+                white_area -= 1
+
+    if 0.85 < white_area / area_in:
+        return True
+
+
+
+
 picture_name = input()
 image = cv2.imread("test_images/"+picture_name+".jpeg")
 img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -76,3 +102,5 @@ if red_brick(image, n):
     print('Red Brick sign')
 elif speed_limit(image, n):
     print('Speed limit sign')
+elif no_road(image, n):
+    print('End of all restricted areas sign')
