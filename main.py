@@ -74,7 +74,6 @@ def no_stopping(i, area_in):
 
 
 def move(i, area_in):
-    print(colored_areas(i, area_in, "blue"))
     if 0.8 < colored_areas(i, area_in, "blue") < 0.95:
         return 'straight'
     elif 0.55 < colored_areas(i, area_in, "blue") < 0.75:
@@ -82,7 +81,7 @@ def move(i, area_in):
 
 
 picture_name = input()
-image = cv2.imread("test_images/"+picture_name+".jpeg")
+image = cv2.imread("test/"+picture_name+".jpeg")
 img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 sign = 'other sign'
 
@@ -90,7 +89,7 @@ sign = 'other sign'
 circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 1.3, 100)
 if circles is not None:
     # Get the (x, y, r) as integers
-    circles = np.round(circles[0, :]).astype("int")
+    circles = np.round(circles[0]).astype("int")
 
     # the number of pixels in the circle
     n = image.shape[0] * image.shape[1]
@@ -115,5 +114,5 @@ if circles is not None:
         sign = "Roundabout sign"
 
 print(sign)
-cv2.imshow(sign, cv2.imread("test_images/"+picture_name+".jpeg"))
+cv2.imshow(sign, cv2.imread("test/"+picture_name+".jpeg"))
 cv2.waitKey(0)
